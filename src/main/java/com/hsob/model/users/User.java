@@ -1,12 +1,17 @@
 package com.hsob.model.users;
 
+
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 
-@Document("user")
+/**
+ * @author carlos
+ */
+
+@Document(collection = "user")
 @Getter
 @Setter
 public class User {
@@ -24,8 +29,4 @@ public class User {
     public String phone;
     public ArrayList<Abilitys> abilitys;
 
-    public User(User user) {
-    }
-    public User() {
-    }
 }

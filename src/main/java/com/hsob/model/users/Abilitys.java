@@ -2,6 +2,9 @@ package com.hsob.model.users;
 
 import lombok.Getter;
 import lombok.Setter;
+/**
+ * @author carlos
+ */
 
 @Getter
 @Setter
