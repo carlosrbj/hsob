@@ -10,8 +10,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import javax.rmi.CORBA.Util;
 
 /**
  * @author carlos
@@ -55,7 +56,6 @@ public class UserService {
             logger.error(msg);
             throw new IllegalArgumentException(msg);
         }
-
     }
 
 
@@ -63,23 +63,29 @@ public class UserService {
         try{
             Criteria criteria =  Criteria.where("username").is(username);
             Query query = new Query(criteria);
-            User user = hsobdb.findOne(query, User.class);
-            String digest = Utils.generateDigest(password, user.getSalt());
 
-            if (user.getDigest().equals(digest)){
+            User user = hsobdb.findOne(query, User.class);
+            if (user == null){
+                throw new IllegalArgumentException("User not found");
+            }
+
+            boolean validPassword = Utils.validatePassword(password, user);
+
+            if (validPassword){
                 Update update = new Update();
                 update.set("address", address);
-                hsobdb.upsert(query, update, User.class);
-            } else{
-                String msg = "invalid password";
-                logger.error(msg);
-                throw new IllegalArgumentException(msg);
-            }
-        } catch (Exception e){
-            String msg = e.getMessage();
-            logger.error(msg);
-            throw new IllegalArgumentException(msg);
-        }
 
+                hsobdb.upsert(query, update, User.class);
+
+                logger.info("Address updated");
+            } else{
+                logger.error("invalid password");
+                throw new IllegalArgumentException("invalid password");
+            }
+
+        } catch (Exception e){
+            logger.error(e.getMessage());
+            throw new IllegalArgumentException(e.getMessage());
+        }
     }
 }
