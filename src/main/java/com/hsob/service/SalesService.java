@@ -2,13 +2,15 @@ package com.hsob.service;
 
 import com.hsob.model.sales.Sales;
 import com.hsob.repository.SalesRepository;
-import org.bson.Document;
-import org.bson.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Optional;
+
+/**
+ * @author carlos
+ */
 
 @Service
 public class SalesService {
