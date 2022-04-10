@@ -1,19 +1,16 @@
 package com.hsob;
 
+import java.nio.charset.Charset;
 import java.security.SecureRandom;
 import java.util.Random;
 
 import com.hsob.model.users.User;
-import com.hsob.repository.DAO;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.jasypt.digest.StandardStringDigester;
 import org.jasypt.salt.StringFixedSaltGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 
 /**
  * @author carlos
@@ -64,4 +61,25 @@ public class Utils {
         }
         return false;
     }
+
+    public static String generateAlphaNumericString(int i){
+
+        byte[] bytearray = new byte[256];
+        new Random().nextBytes(bytearray);
+
+        String string = new String(bytearray, Charset.forName("UTF-8"));
+        StringBuilder stringBuffer = new StringBuilder();
+        String alphaNumericString = string.replaceAll("[^A-Z0-9]", "");
+
+        for (int m = 0; m < alphaNumericString.length(); m++) {
+            if (Character.isLetter(alphaNumericString.charAt(m)) && (i > 0) || Character.isDigit(alphaNumericString.charAt(m)) && (i > 0)) {
+                stringBuffer.append(alphaNumericString.charAt(m));
+                i--;
+            }
+        }
+
+        return stringBuffer.toString();
+    }
+
+
 }

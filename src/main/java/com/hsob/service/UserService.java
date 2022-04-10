@@ -3,6 +3,7 @@ package com.hsob.service;
 import com.hsob.Utils;
 import com.hsob.model.users.Address;
 import com.hsob.model.users.User;
+import com.hsob.repository.DAO;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +13,12 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import javax.rmi.CORBA.Util;
-
 /**
  * @author carlos
  */
 
 @Service
-public class UserService {
-    protected final Log logger = LogFactory.getLog(getClass());
-
-    @Autowired
-    MongoTemplate hsobdb;
+public class UserService extends DAO {
 
     public void saveUser(User user, String password, String confirmPassword) {
         if (password.isEmpty() || password.equals(confirmPassword)){
