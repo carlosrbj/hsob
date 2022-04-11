@@ -11,6 +11,8 @@ import org.jasypt.digest.StandardStringDigester;
 import org.jasypt.salt.StringFixedSaltGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 /**
  * @author carlos
@@ -81,5 +83,16 @@ public class Utils {
         return stringBuffer.toString();
     }
 
+    public static User validateUser (String username){
+        Criteria criteria =  Criteria.where("username").is(username);
+        Query query = new Query(criteria);
+
+        User user = hsobdb.findOne(query, User.class);
+        if (user == null){
+            throw new IllegalArgumentException("User not found");
+        } else {
+            return user;
+        }
+    }
 
 }
