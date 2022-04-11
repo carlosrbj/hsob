@@ -15,9 +15,9 @@ public class Product {
     public String type;
     public String unit;
     public double quantity;
-    public String category;
     public double purchasePrice;
     public double salePrice;
-    public String creationDate;
-    public ArrayList<Category> categorys;
+    public long creationDate;
+    public ArrayList<Category> categories;
+
 }

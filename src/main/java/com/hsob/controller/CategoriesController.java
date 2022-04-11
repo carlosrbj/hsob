@@ -27,9 +27,10 @@ public class CategoriesController {
     }
 
     @GetMapping("get-list")
-    public ResponseEntity getCategoriesList(){
+    public ResponseEntity getCategoriesList(@RequestHeader String password,
+                                            @RequestHeader String username){
         try {
-            List<Category> categoriesList = categoryService.getCategoriesList();
+            List<Category> categoriesList = categoryService.getCategoriesList(password, username);
             return ResponseEntity.ok(categoriesList);
         } catch (Exception exception){
             return ResponseEntity.internalServerError().body(exception.getMessage());

@@ -15,10 +15,7 @@ public class CategoryService extends DAO {
 
     public void createCategory(String category, String password, String username) {
         try {
-            Criteria criteria =  Criteria.where("username").is(username);
-            Query query = new Query(criteria);
-
-            User user = hsobdb.findOne(query, User.class);
+            User user = hsobdb.findOne(new Query(Criteria.where("username").is(username)), User.class);
             if (user == null){
                 throw new IllegalArgumentException("User not found");
             }
@@ -26,7 +23,7 @@ public class CategoryService extends DAO {
 
             if (validPassword){
                 Category newCategory = new Category();
-                if (!checkExistingCategorybyName(category)){
+                if (!checkExistingCategoryByName(category)){
                     newCategory.setName(category);
                     newCategory.setCategoryId(createCategoryId());
                     hsobdb.save(newCategory);
@@ -48,13 +45,13 @@ public class CategoryService extends DAO {
 
     private String createCategoryId(){
         String categoryId= Utils.generateAlphaNumericString(6);
-        while (checkExistingCategorybyId(categoryId)){
+        while (checkExistingCategoryId(categoryId)){
             categoryId= Utils.generateAlphaNumericString(6);
         }
         return categoryId;
     }
 
-    private boolean checkExistingCategorybyId(String categoryId){
+    private boolean checkExistingCategoryId(String categoryId){
         Criteria criteria = Criteria.where("categoryId").is(categoryId);
         Query query = new Query(criteria);
         Category category = hsobdb.findOne(query, Category.class);
@@ -64,7 +61,7 @@ public class CategoryService extends DAO {
         return true;
     }
 
-    private boolean checkExistingCategorybyName(String name){
+    private boolean checkExistingCategoryByName(String name){
         Criteria criteria = Criteria.where("name").is(name);
         Query query = new Query(criteria);
         Category category = hsobdb.findOne(query, Category.class);
@@ -74,7 +71,24 @@ public class CategoryService extends DAO {
         return true;
     }
 
-    public List<Category> getCategoriesList() {
-        return hsobdb.findAll(Category.class);
+    public List<Category> getCategoriesList(String password, String username) {
+        try {
+            User user = hsobdb.findOne(new Query(Criteria.where("username").is(username)), User.class);
+            if (user == null){
+                throw new IllegalArgumentException("User not found");
+            }
+            boolean validPassword = Utils.validatePassword(password, user);
+
+            if (validPassword){
+                return hsobdb.findAll(Category.class);
+            } else {
+                logger.error("Invalid password");
+                throw new IllegalArgumentException("Invalid password");
+            }
+        } catch (Exception exception){
+            logger.error(exception.getMessage());
+            throw new IllegalArgumentException(exception.getMessage());
+        }
+
     }
 }

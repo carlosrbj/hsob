@@ -56,21 +56,17 @@ public class UserService extends DAO {
 
     public void updateAddress(Address address, String password, String username) {
         try{
-            Criteria criteria =  Criteria.where("username").is(username);
-            Query query = new Query(criteria);
-
-            User user = hsobdb.findOne(query, User.class);
+            User user = hsobdb.findOne(new Query(Criteria.where("username").is(username)), User.class);
             if (user == null){
                 throw new IllegalArgumentException("User not found");
             }
-
             boolean validPassword = Utils.validatePassword(password, user);
 
             if (validPassword){
                 Update update = new Update();
                 update.set("address", address);
 
-                hsobdb.upsert(query, update, User.class);
+                hsobdb.upsert(new Query(Criteria.where("username").is(username)), update, User.class);
 
                 logger.info("Address updated");
             } else{
