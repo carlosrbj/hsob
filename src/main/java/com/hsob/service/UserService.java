@@ -6,12 +6,20 @@ import com.hsob.model.users.User;
 import com.hsob.repository.DAO;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Arrays;
 
 /**
  * @author carlos
@@ -78,5 +86,24 @@ public class UserService extends DAO {
             logger.error(e.getMessage());
             throw new IllegalArgumentException(e.getMessage());
         }
+    }
+
+    public void imageTo64Base(MultipartFile file, String username) throws IOException {
+
+//        String photo = String.valueOf(file.getInputStream());
+
+//        File outputFile = new File(System.getProperty("java.io.tmpdir"), String.valueOf(file.getInputStream()));
+//        file.transferTo(outputFile);
+//
+//        FileInputStream fileInputStreamReader = new FileInputStream(outputFile);
+//        byte[] bytes = new byte[(int)outputFile.length()];
+//        fileInputStreamReader.read(bytes);
+        String photo = new String(Base64.encodeBase64(file.getBytes()), Charset.defaultCharset());
+
+        Update update = new Update();
+        update.set("photo", photo);
+
+        hsobdb.upsert(new Query(Criteria.where("username").is(username)), update, User.class);
+
     }
 }

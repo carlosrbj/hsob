@@ -1,18 +1,31 @@
 package com.hsob;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 
 import com.hsob.model.users.User;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.jasypt.digest.StandardStringDigester;
 import org.jasypt.salt.StringFixedSaltGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.ImageInputStream;
 
 /**
  * @author carlos
@@ -82,4 +95,23 @@ public class Utils {
 
         return stringBuffer.toString();
     }
+
+    public static void imageTo64Base(MultipartFile file, String username) throws IOException {
+
+        File outputFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
+        file.transferTo(outputFile);
+
+        FileInputStream fileInputStreamReader = new FileInputStream(outputFile);
+        byte[] bytes = new byte[(int)outputFile.length()];
+        fileInputStreamReader.read(bytes);
+        String h = Arrays.toString(Base64.encodeBase64(bytes));
+
+        Update update = new Update();
+        update.set("photo", h);
+
+        hsobdb.upsert(new Query(Criteria.where("username").is(username)), update, User.class);
+
+    }
+
+
 }

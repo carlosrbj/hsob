@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
+import java.util.ArrayList;
 
 /**
  * @author carlos
@@ -28,5 +29,6 @@ public class User {
     public Address address;
     public String phone;
     public ArrayList<Abilitys> abilitys;
+    public String photo;
 
 }
