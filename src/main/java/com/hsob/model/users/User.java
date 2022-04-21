@@ -16,10 +16,10 @@ import java.util.ArrayList;
 @Getter
 @Setter
 public class User {
-    public String username;
-    public String name;
-    public String sex;
-    public String gender;
+    private String username;
+    private String name;
+    private String sex;
+    private String gender;
     public String genderIdentity;
     public String socialName;
     public String document;

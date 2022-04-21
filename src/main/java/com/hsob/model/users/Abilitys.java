@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Abilitys {
+public class    Abilitys {
     public String description;
     public int level;
 }
