@@ -1,12 +1,9 @@
 package com.hsob.repository;
 
-import com.hsob.model.photos.Photo;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
 
 /**
  * @author carlos

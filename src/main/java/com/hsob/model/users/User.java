@@ -24,6 +24,7 @@ public class User {
     public String socialName;
     public String document;
     public String documentType;
+    public String email;
     public String salt;
     public String digest;
     public Address address;
