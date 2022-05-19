@@ -1,11 +1,10 @@
-package com.hsob.model.users;
-
+package com.hsob.model.forum;
 
 import com.hsob.security.Profile;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,47 +14,29 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * @author carlos
- */
-
 @Document(collection = "user")
 @Getter
 @Setter
-public class User implements UserDetails{
-    private @MongoId ObjectId id;
+@EntityScan
+public class UserForum implements UserDetails {
+    private String name;
     private String username;
     private String password;
-    private String name;
-    private String sex;
-    private String gender;
-    private String genderIdentity;
-    private String socialName;
-    private String document;
-    private String documentType;
-    private String email;
-    private String salt;
-    private String digest;
-    private Address address;
-    private String phone;
-    private ArrayList<Abilitys> abilitys;
-    private String photo;
-    @DBRef(db= "profile")
-    private List<Profile> profile = new ArrayList<>();
+    private List<Profile> profiles = new ArrayList<>();
 
-    @Override /*coleção de perfis de acesso*/
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.profile;
+        return this.profiles;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.getUsername();
     }
 
     @Override
     public String getPassword() {
-        return this.digest;
-    }
-
-    @Override
-    public String getUsername(){
-        return this.username;
+        return this.getPassword();
     }
 
     @Override
