@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -19,6 +20,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationService authenticationService;
+    @Autowired
+    private TokenService tokenService;
     @Override
     @Bean
     protected AuthenticationManager authenticationManager() throws Exception{
@@ -38,7 +41,8 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/api/auth").permitAll()
                 .anyRequest().authenticated() /*qualquer requisição elem das declaradas acima precisa de autenticação*/
                 .and().csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); /*usa o formulário de autenticação gerado pelo spring*/
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().addFilterBefore(new AuthenticationWithTokenFilter(tokenService), UsernamePasswordAuthenticationFilter.class); /*usa o formulário de autenticação gerado pelo spring*/
     }
 
     @Override /*Configurações de recursos web*/

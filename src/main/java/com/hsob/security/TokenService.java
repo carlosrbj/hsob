@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.security.Signature;
 import java.util.Date;
 
 @Service
@@ -21,14 +22,24 @@ public class TokenService extends DAO {
 
     public String generateToken(Authentication authentication) {
 //        UserForum userForum = (UserForum) authentication.getPrincipal();
-        Date hoje = new Date();
-        Date dataExpiracao = new Date(hoje.getTime() + Long.parseLong(expiration));
+        Date now = new Date();
+        Date expirationTime = new Date(now.getTime() + Long.parseLong(expiration));
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
         return Jwts.builder().setIssuer("Api H.S.O.B.")
                 .setSubject(authentication.getPrincipal().toString())
-                .setIssuedAt(hoje)
-                .setExpiration(dataExpiracao)
-//                .signWith(SignatureAlgorithm.HS256,"123")
+                .setIssuedAt(now)
+                .setExpiration(expirationTime)
+                .signWith(signatureAlgorithm,secret)
                 .compact();
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
