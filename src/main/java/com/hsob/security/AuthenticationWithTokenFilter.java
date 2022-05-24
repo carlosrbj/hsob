@@ -1,6 +1,10 @@
 package com.hsob.security;
 
+import com.hsob.model.forum.UserForum;
+import com.hsob.repository.DAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -21,10 +25,18 @@ public class AuthenticationWithTokenFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String token = recoverToken(request);
         boolean valid = tokenService.isTokenValid(token);
-        System.out.println(token);
-        System.out.println(valid);
 
+        if (valid){
+            authenticateClient(token);
+        }
         filterChain.doFilter(request, response);
+    }
+
+    private void authenticateClient(String token) {
+        String idUser = tokenService.getIdUser(token);
+        UserForum user = tokenService.setUserAuth(idUser);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     private String recoverToken(HttpServletRequest request) {
