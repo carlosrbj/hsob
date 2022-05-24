@@ -20,15 +20,15 @@ public class TokenService extends DAO {
 
 
     public String generateToken(Authentication authentication) {
-        UserForum userForum = (UserForum) authentication.getPrincipal();
+//        UserForum userForum = (UserForum) authentication.getPrincipal();
         Date hoje = new Date();
         Date dataExpiracao = new Date(hoje.getTime() + Long.parseLong(expiration));
 
         return Jwts.builder().setIssuer("Api H.S.O.B.")
-                .setSubject(userForum.getUsername())
+                .setSubject(authentication.getPrincipal().toString())
                 .setIssuedAt(hoje)
                 .setExpiration(dataExpiracao)
-                .signWith(SignatureAlgorithm.HS256,secret)
+//                .signWith(SignatureAlgorithm.HS256,"123")
                 .compact();
     }
 }

@@ -26,7 +26,7 @@ public class AuthController {
     public ResponseEntity autentication(@RequestBody @Valid LoginForm loginForm){
         UsernamePasswordAuthenticationToken userToken = loginForm.convert();
         try {
-            String token = tokenService.generateToken(authManager.authenticate(userToken));
+            String token = tokenService.generateToken(userToken);
             System.out.println(token);
             return ResponseEntity.ok().build();
         } catch (AuthenticationException e){
