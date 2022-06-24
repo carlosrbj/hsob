@@ -1,7 +1,6 @@
 package com.hsob.security;
 
 import com.hsob.model.forum.UserForum;
-import com.hsob.model.users.User;
 import com.hsob.repository.DAO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -33,6 +32,7 @@ public class TokenService extends DAO {
                 .signWith(signatureAlgorithm, secret)
                 .compact();
     }
+
     public boolean isTokenValid(String token) {
         try {
             Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token);

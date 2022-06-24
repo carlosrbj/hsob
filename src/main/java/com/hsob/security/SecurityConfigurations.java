@@ -16,7 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationService authenticationService;
@@ -39,13 +38,16 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/api/*").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/users/saveUser").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/auth").permitAll()
+                .antMatchers(HttpMethod.GET,"/actuator/**").permitAll()
                 .anyRequest().authenticated() /*qualquer requisição elem das declaradas acima precisa de autenticação*/
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(new AuthenticationWithTokenFilter(tokenService), UsernamePasswordAuthenticationFilter.class); /*usa o formulário de autenticação gerado pelo spring*/
     }
 
-    @Override /*Configurações de recursos web*/
+    @Override
     public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                .antMatchers("/**.html", "/v2/api-docs", "/webjars/**", "/configuration/**", "/swagger-resources/**");
     }
 }

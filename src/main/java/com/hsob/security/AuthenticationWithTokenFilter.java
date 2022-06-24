@@ -1,8 +1,6 @@
 package com.hsob.security;
 
 import com.hsob.model.forum.UserForum;
-import com.hsob.repository.DAO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -14,10 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 public class AuthenticationWithTokenFilter extends OncePerRequestFilter {
     private TokenService tokenService;
+
     public AuthenticationWithTokenFilter(TokenService tokenService){
         this.tokenService = tokenService;
     }
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -26,9 +24,8 @@ public class AuthenticationWithTokenFilter extends OncePerRequestFilter {
         String token = recoverToken(request);
         boolean valid = tokenService.isTokenValid(token);
 
-        if (valid){
-            authenticateClient(token);
-        }
+        if (valid) authenticateClient(token);
+
         filterChain.doFilter(request, response);
     }
 
@@ -41,9 +38,8 @@ public class AuthenticationWithTokenFilter extends OncePerRequestFilter {
 
     private String recoverToken(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer")){
-            return null;
-        }
+        if (token == null || !token.startsWith("Bearer")) return null;
+        
         return token.substring(7);
     }
 }
