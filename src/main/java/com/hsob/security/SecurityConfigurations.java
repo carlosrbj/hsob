@@ -36,6 +36,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET,"/api/*").permitAll()
+                .antMatchers(HttpMethod.GET,"/serviceStatus").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/users/saveUser").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/categories/new-category").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/categories/get-list").permitAll()
