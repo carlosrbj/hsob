@@ -23,8 +23,9 @@ public class TopicsController {
     @GetMapping("/list")
     public List<TopicDTO> topicList(){
         Topic topic = new Topic("Duvida 1", "Primeira Duvida", new Course("Spring", "Programação"));
+        Topic topic2 = new Topic("Duvida 2", "Segunda Duvida", new Course("Spring", "Programação"));
 
-        return TopicDTO.converter(Arrays.asList(topic, topic));
+        return TopicDTO.converter(Arrays.asList(topic, topic2));
     }
 
 
