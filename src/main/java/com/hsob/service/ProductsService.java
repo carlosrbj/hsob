@@ -5,7 +5,11 @@ import com.hsob.model.products.Category;
 import com.hsob.model.products.Product;
 import com.hsob.model.users.User;
 import com.hsob.repository.DAO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
@@ -105,4 +109,5 @@ public class ProductsService extends DAO {
             throw new IllegalArgumentException(exception.getMessage());
         }
     }
+
 }

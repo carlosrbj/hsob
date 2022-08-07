@@ -1,18 +1,12 @@
 package com.hsob.controller;
 
-import com.hsob.Utils;
-import com.hsob.model.products.Category;
 import com.hsob.model.products.Product;
 import com.hsob.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.imageio.stream.FileImageInputStream;
-import javax.imageio.stream.ImageInputStream;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -36,8 +30,8 @@ public class ProductsController {
 
     @GetMapping("get-list")
     public ResponseEntity getProductByCategoryName(@RequestParam String categoryName,
-                                               @RequestHeader String password,
-                                               @RequestHeader String username){
+                                                   @RequestHeader String password,
+                                                   @RequestHeader String username){
         try {
             List<Product> productList = productsService.getProductByCategory(categoryName, password, username);
             return ResponseEntity.ok(productList);
@@ -56,6 +50,5 @@ public class ProductsController {
             return ResponseEntity.internalServerError().body(exception.getMessage());
         }
     }
-
 
 }
