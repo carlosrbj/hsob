@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class ProductsService extends DAO {
 
-    public void saveNewProduct(Product product, String password, String username) {
+    public void saveNewProduct(List<Product> products, String password, String username) {
         try {
             User user = hsobdb.findOne(new Query(Criteria.where("username").is(username)), User.class);
             if (user == null){
@@ -23,10 +23,12 @@ public class ProductsService extends DAO {
             boolean validPassword = Utils.validatePassword(password, user);
 
             if (validPassword){
-                product.setProductId(createProductId());
-                product.setCreationDate(System.currentTimeMillis());
-                hsobdb.save(product);
-                logger.info("Product saved: " + product);
+                for (Product product : products){
+                    product.setProductId(createProductId());
+                    product.setCreationDate(System.currentTimeMillis());
+                    hsobdb.save(product);
+                    logger.info("Product saved: " + product);
+                }
             } else {
                 logger.error("Invalid password");
                 throw new IllegalArgumentException("Invalid password");
@@ -64,7 +66,7 @@ public class ProductsService extends DAO {
     }
 
 
-    public List<Product> getProductByCategory(String categoryId, String password, String username) {
+    public List<Product> getProductByCategory(String categoryName, String password, String username) {
         try {
             User user = hsobdb.findOne(new Query(Criteria.where("username").is(username)), User.class);
             if (user == null){
@@ -73,7 +75,27 @@ public class ProductsService extends DAO {
             boolean validPassword = Utils.validatePassword(password, user);
 
             if (validPassword){
-                return hsobdb.find(new Query(Criteria.where("categories.categoryId").is(categoryId)), Product.class);
+                return hsobdb.find(new Query(Criteria.where("categories.name").is(categoryName)), Product.class);
+            } else {
+                logger.error("Invalid password");
+                throw new IllegalArgumentException("Invalid password");
+            }
+        } catch (Exception exception){
+            logger.error(exception.getMessage());
+            throw new IllegalArgumentException(exception.getMessage());
+        }
+    }
+
+    public List<Product> getAllProduct(String password, String username) {
+        try {
+            User user = hsobdb.findOne(new Query(Criteria.where("username").is(username)), User.class);
+            if (user == null){
+                throw new IllegalArgumentException("User not found");
+            }
+            boolean validPassword = Utils.validatePassword(password, user);
+
+            if (validPassword){
+                return hsobdb.find(new Query(), Product.class);
             } else {
                 logger.error("Invalid password");
                 throw new IllegalArgumentException("Invalid password");
