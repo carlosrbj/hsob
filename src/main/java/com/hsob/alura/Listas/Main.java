@@ -6,26 +6,27 @@ import java.util.Collections;
 
 public class Main {
     public static void main(String[] args) {
+//        System.out.println("Result: " + result());
 
-        String aula1 = "Conhecendo listas";
-        String aula2 = "Modelandoa  classe Aula";
-        String aula3 = "Trabalhando com Cursos e Sets";
-        String aula4 = "Aumentando conhecimento";
-
-        ArrayList<String> lists = new ArrayList<>();
-        lists.add(aula1);
-        lists.add(aula2);
-        lists.add(aula3);
-        lists.add(aula4);
-
-
-        for (String list: lists ) {
-            System.out.println("Aula: " + list);
+        StringBuilder sb = new StringBuilder(100);
+        String s = "";
+        if (sb.equals(s)) {
+            System.out.println("First");
+        } else if (sb.toString().equals(s.toString())) {
+            System.out.println("Second");
+        } else {
+            System.out.println("Third");
         }
-        System.out.println("\n*********************\n");
-        Collections.sort(lists);
-        for (String list: lists ) {
-            System.out.println("Aula: " + list);
+    }
+
+    public static int result() {
+        try {
+            int a =10/0;
+            return 1;
+        } catch (Exception e) {
+            return 2;
+        } finally{
+            return 3;
         }
     }
 
